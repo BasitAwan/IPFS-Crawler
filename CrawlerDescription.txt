@@ -1,0 +1,13 @@
+The crawler invokes cli commands of the IPFS system to gather more information about it.
+This is a list of steps the crawler follows:
+    1. Run "ipfs swarm peers" command.
+    2. Look for the peers return and extract their keys
+    3. Send keys to jobs channel for the go routines to read from and processed.
+    4. Go routines take keys and run command "ipfs dht findpeer $key" to get more detail about the peer such as known IP addresses.
+    5. Send this data to channels from where it is checked for duplication and written into a csv file.
+    6. Run command "ipfs dht query $key" this will give the closest peers to the key.
+    7. Take these keys and send them again to the jobs channel.
+    8. Repeat step 4.
+
+I ran my crawler for 1hr and 10 mins and made two datasets one includes individual Ip addresses and their corresponding keys and the other includes keys with corresponding Ip addresses.  I found 106570 unique Ip addresses whereas only
+7644 unique keys. I only put the keys for which I could retrieve IP addresses for hence why they are so less. It might be a bug in the crawler on my end.
